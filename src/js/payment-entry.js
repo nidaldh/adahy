@@ -58,7 +58,7 @@ function loadCustomersForPayment() {
             customers.forEach(customer => {
                 const option = document.createElement('option');
                 option.value = customer.id;
-                option.textContent = `${customer.name} - الرصيد: ${customer.balance?.toFixed(2) || customer.totalAmount?.toFixed(2)} جنيه`;
+                option.textContent = `${customer.name} - الرصيد: ${customer.balance?.toFixed(2) || customer.totalAmount?.toFixed(2)} شيكل`;
                 select.appendChild(option);
             });
         })

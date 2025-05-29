@@ -5,7 +5,13 @@ function initializeCustomerList() {
 }
 
 function displayCustomers(searchTerm = '') {
-    const container = document.getElementById('customer-list-container');
+    const container = document.getEl         <div style="margin-top: 20px; text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+            <div><strong>إجمالي المبلغ: ${customer.totalAmount.toFixed(2)} شيكل</strong></div>
+            <div><strong>إجمالي المدفوع: ${(customer.totalPayments || 0).toFixed(2)} شيكل</strong></div>
+            <div style="color: ${customer.balance > 0 ? '#e74c3c' : '#27ae60'}"><strong>الرصيد المتبقي: ${(customer.balance || 0).toFixed(2)} شيكل</strong></div>
+        </div>      <div><strong>إجمالي المبلغ: ${customer.totalAmount.toFixed(2)} شيكل</strong></div>
+            <div><strong>إجمالي المدفوع: ${(customer.totalPayments || 0).toFixed(2)} شيكل</strong></div>
+            <div style="color: ${customer.balance > 0 ? '#e74c3c' : '#27ae60'}"><strong>الرصيد المتبقي: ${(customer.balance || 0).toFixed(2)} شيكل</strong></div>ntById('customer-list-container');
     
     loadCustomersFromStorage()
         .then(customers => {
@@ -67,8 +73,8 @@ function createCustomersTable(customers) {
             <td>${customer.name}</td>
             <td>${customer.phone || 'غير محدد'}</td>
             <td>${totalAnimals}</td>
-            <td>${totalAmount.toFixed(2)} جنيه</td>
-            <td style="color: ${balance > 0 ? 'red' : 'green'}">${balance.toFixed(2)} جنيه</td>
+            <td>${totalAmount.toFixed(2)} شيكل</td>
+            <td style="color: ${balance > 0 ? 'red' : 'green'}">${balance.toFixed(2)} شيكل</td>
             <td>${formattedDate}</td>
             <td>
                 <button class="btn btn-primary" onclick="showAnimalDetails('${customer.id}')">
@@ -151,8 +157,8 @@ function createAnimalDetailsModal(customer) {
                 <td style="padding: 8px; border: 1px solid #ddd;">${animal.type}</td>
                 <td style="padding: 8px; border: 1px solid #ddd;">${animal.number || 'غير محدد'}</td>
                 <td style="padding: 8px; border: 1px solid #ddd;">${animal.weight} كجم</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${animal.kiloPrice} جنيه</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${animal.totalPrice.toFixed(2)} جنيه</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${animal.kiloPrice} شيكل</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${animal.totalPrice.toFixed(2)} شيكل</td>
                 <td style="padding: 8px; border: 1px solid #ddd; background-color: ${statusColor};">
                     <select onchange="updateAnimalStatusInModal('${customer.id}', '${animal.compositeKey}', this.value)" style="background: transparent; border: none;">
                         <option value="${ANIMAL_STATUS.ALIVE}" ${animal.status === ANIMAL_STATUS.ALIVE ? 'selected' : ''}>${ANIMAL_STATUS.ALIVE}</option>
@@ -174,9 +180,9 @@ function createAnimalDetailsModal(customer) {
         <h3 style="margin-bottom: 20px; color: #2c3e50;">تفاصيل أضاحي العميل: ${customer.name}</h3>
         ${animalsTable}
         <div style="margin-top: 20px; text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-            <div><strong>إجمالي المبلغ: ${customer.totalAmount.toFixed(2)} جنيه</strong></div>
-            <div><strong>إجمالي المدفوع: ${(customer.totalPayments || 0).toFixed(2)} جنيه</strong></div>
-            <div style="color: ${customer.balance > 0 ? '#e74c3c' : '#27ae60'}"><strong>الرصيد المتبقي: ${(customer.balance || 0).toFixed(2)} جنيه</strong></div>
+            <div><strong>إجمالي المبلغ: ${customer.totalAmount.toFixed(2)} شيكل</strong></div>
+            <div><strong>إجمالي المدفوع: ${(customer.totalPayments || 0).toFixed(2)} شيكل</strong></div>
+            <div style="color: ${customer.balance > 0 ? '#e74c3c' : '#27ae60'}"><strong>الرصيد المتبقي: ${(customer.balance || 0).toFixed(2)} شيكل</strong></div>
         </div>
         <div style="margin-top: 20px; text-align: center;">
             <button class="btn btn-danger" onclick="this.closest('div').parentElement.remove()">إغلاق</button>

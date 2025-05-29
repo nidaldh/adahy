@@ -75,16 +75,16 @@ function createBalanceSummary(balanceData) {
             </div>
             <div>
                 <div style="font-size: 1.1rem;">إجمالي المبيعات</div>
-                <div style="font-size: 1.5rem; font-weight: bold;">${totalOriginal.toFixed(2)} جنيه</div>
+                <div style="font-size: 1.5rem; font-weight: bold;">${totalOriginal.toFixed(2)} شيكل</div>
             </div>
             <div>
                 <div style="font-size: 1.1rem;">إجمالي المدفوعات</div>
-                <div style="font-size: 1.5rem; font-weight: bold;">${totalPayments.toFixed(2)} جنيه</div>
+                <div style="font-size: 1.5rem; font-weight: bold;">${totalPayments.toFixed(2)} شيكل</div>
             </div>
             <div>
                 <div style="font-size: 1.1rem;">إجمالي الرصيد المتبقي</div>
                 <div style="font-size: 1.5rem; font-weight: bold; color: ${totalBalance >= 0 ? '#28a745' : '#dc3545'};">
-                    ${totalBalance.toFixed(2)} جنيه
+                    ${totalBalance.toFixed(2)} شيكل
                 </div>
             </div>
         </div>
@@ -123,9 +123,9 @@ function createBalanceTable(balanceData) {
         row.innerHTML = `
             <td>${data.name}</td>
             <td>${data.phone}</td>
-            <td>${data.originalAmount.toFixed(2)} جنيه</td>
-            <td>${data.totalPayments.toFixed(2)} جنيه</td>
-            <td class="${balanceClass}">${data.currentBalance.toFixed(2)} جنيه</td>
+            <td>${data.originalAmount.toFixed(2)} شيكل</td>
+            <td>${data.totalPayments.toFixed(2)} شيكل</td>
+            <td class="${balanceClass}">${data.currentBalance.toFixed(2)} شيكل</td>
             <td>${data.paymentsCount}</td>
             <td>${formattedDate}</td>
             <td>
@@ -212,9 +212,9 @@ function createPaymentHistoryModal(customer, payments) {
             paymentsTable += `
                 <tr>
                     <td style="padding: 8px; border: 1px solid #ddd;">${paymentDate}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">${(payment.paymentAmount || 0).toFixed(2)} جنيه</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">${(payment.discountAmount || 0).toFixed(2)} جنيه</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">${(payment.totalDeduction || 0).toFixed(2)} جنيه</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${(payment.paymentAmount || 0).toFixed(2)} شيكل</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${(payment.discountAmount || 0).toFixed(2)} شيكل</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${(payment.totalDeduction || 0).toFixed(2)} شيكل</td>
                     <td style="padding: 8px; border: 1px solid #ddd;">${payment.notes || 'لا توجد ملاحظات'}</td>
                 </tr>
             `;
@@ -223,7 +223,7 @@ function createPaymentHistoryModal(customer, payments) {
         paymentsTable += '</tbody></table>';
         
         const totalPayments = payments.reduce((sum, payment) => sum + (payment.totalDeduction || 0), 0);
-        paymentsTable += `<div style="margin-top: 15px; text-align: center;"><strong>إجمالي المدفوعات: ${totalPayments.toFixed(2)} جنيه</strong></div>`;
+        paymentsTable += `<div style="margin-top: 15px; text-align: center;"><strong>إجمالي المدفوعات: ${totalPayments.toFixed(2)} شيكل</strong></div>`;
     }
     
     content.innerHTML = `
