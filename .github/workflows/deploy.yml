@@ -42,6 +42,13 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
+      - name: List files to be deployed
+        run: |
+          echo "Files in src directory:"
+          ls -la ./src/
+          echo "Content of index.html:"
+          head -20 ./src/index.html
+        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -58,5 +65,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          enablement: true
