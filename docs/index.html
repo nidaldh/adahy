@@ -1,102 +1,12 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق مبيعات الحيوانات</title>
-    <link rel="stylesheet" href="css/style.css">
-    
-    <!-- Firebase CDN - Updated to v11.8.1 -->
-    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics-compat.js"></script>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0; url=./src/index.html">
+    <link rel="canonical" href="./src/index.html">
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="login-container" class="login-container">
-        <div class="login-form">
-            <div id="loading-indicator" class="loading-indicator">
-                <p>جاري التحميل...</p>
-            </div>
-            <div id="login-content" style="display: none;">
-                <h2>تسجيل الدخول</h2>
-                <form id="login-form">
-                    <div class="form-group">
-                        <label for="email">البريد الإلكتروني:</label>
-                        <input type="email" id="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">كلمة المرور:</label>
-                        <input type="password" id="password" required>
-                    </div>
-                    <button type="submit">دخول</button>
-                    <div id="login-error" class="error-message"></div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main App Container -->
-    <div id="app-container" class="container" style="display: none;">
-        <div class="header">
-            <h1>برنامج تنظيم الأضاحي الإسلامية</h1>
-            <p>نظام إدارة الأضاحي والعملاء والذبح</p>
-        </div>
-        
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('customer-entry')">إدارة العملاء والأضاحي</button>
-            <button class="tab" onclick="showTab('customer-list')">قائمة العملاء والأضاحي</button>
-            <button class="tab" onclick="showTab('payment-entry')">إدخال المدفوعات</button>
-            <button class="tab" onclick="showTab('balance-sheet')">كشف الرصيد</button>
-        </div>
-
-        <div id="customer-entry" class="tab-content active">
-            <div class="form-section">
-                <h3>معلومات العميل</h3>
-                <div id="customer-form-container"></div>
-            </div>
-            <div class="form-section">
-                <h3>الأضاحي</h3>
-                <div id="animal-form-container"></div>
-                <button class="btn btn-primary" onclick="addAnimal()">إضافة أضحية</button>
-            </div>
-            <button class="btn btn-success" id="submit-customer">حفظ العميل والأضاحي</button>
-        </div>
-
-        <div id="customer-list" class="tab-content">
-            <input type="text" class="search-box" placeholder="البحث عن عميل..." onkeyup="searchCustomers(this.value)">
-            <div class="table-container">
-                <div id="customer-list-container"></div>
-            </div>
-        </div>
-
-        <div id="payment-entry" class="tab-content">
-            <div class="form-section">
-                <h3>إدخال المدفوعات</h3>
-                <div id="payment-form-container"></div>
-            </div>
-            <button class="btn btn-success" id="submit-payment">حفظ المدفوعات</button>
-        </div>
-
-        <div id="balance-sheet" class="tab-content">
-            <input type="text" class="search-box" placeholder="البحث عن عميل..." onkeyup="searchBalance(this.value)">
-            <div class="table-container">
-                <div id="balance-sheet-container"></div>
-            </div>
-        </div>
-    </div> <!-- End of app-container -->
-
-    <!-- Firebase Configuration -->
-    <script src="js/firebase-config.js"></script>
-    <!-- Simplified Authentication Script -->
-    <script src="js/auth-simple.js"></script>
-    <!-- Application Scripts -->
-    <script src="js/app.js"></script>
-    <script src="js/customer-entry.js"></script>
-    <script src="js/customer-list.js"></script>
-    <script src="js/payment-entry.js"></script>
-    <script src="js/balance-sheet.js"></script>
-    <script src="js/test-data.js"></script>
+    <p>If you are not redirected automatically, follow this <a href="./src/index.html">link to the application</a>.</p>
 </body>
 </html>

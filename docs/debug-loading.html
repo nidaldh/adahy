@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Loading Issue - تشخيص مشكلة التحميل</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .debug-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .debug-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .warning { background-color: #fff3cd; border-color: #ffeaa7; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        #console-output {
+            background: #1e1e1e;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            height: 300px;
+            overflow-y: scroll;
+            white-space: pre-wrap;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+    
+    <!-- Firebase CDN - Same as main app -->
+    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics-compat.js"></script>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔍 Debug Loading Issue - تشخيص مشكلة التحميل</h1>
+        
+        <div class="debug-section info">
+            <h3>📋 Diagnostic Steps</h3>
+            <p>This page will help diagnose why the main app is stuck on "جاري التحميل..." (Loading...)</p>
+        </div>
+
+        <div class="debug-section" id="firebase-check">
+            <h3>🔥 Firebase Availability Check</h3>
+            <div id="firebase-status">Checking...</div>
+        </div>
+
+        <div class="debug-section" id="config-check">
+            <h3>⚙️ Configuration Check</h3>
+            <div id="config-status">Checking...</div>
+        </div>
+
+        <div class="debug-section" id="auth-check">
+            <h3>🔐 Authentication Check</h3>
+            <div id="auth-status">Checking...</div>
+        </div>
+
+        <div class="debug-section">
+            <h3>📊 Actions</h3>
+            <button onclick="testLogin()">Test Login Process</button>
+            <button onclick="clearLocalData()">Clear Local Data</button>
+            <button onclick="window.location.reload()">Reload Page</button>
+            <button onclick="window.open('index.html', '_blank')">Open Main App</button>
+        </div>
+
+        <div class="debug-section">
+            <h3>🖥️ Console Output</h3>
+            <div id="console-output"></div>
+        </div>
+    </div>
+
+    <script src="js/firebase-config.js"></script>
+    <script>
+        // Console capture
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        function addToConsole(type, message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'warn' ? '⚠️' : '✅';
+            consoleOutput.textContent += `[${timestamp}] ${prefix} ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole('log', args.join(' '));
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole('error', args.join(' '));
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addToConsole('warn', args.join(' '));
+        };
+
+        // Start diagnostics
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Starting diagnostic checks...');
+            runDiagnostics();
+        });
+
+        function runDiagnostics() {
+            // Check Firebase availability
+            const firebaseStatus = document.getElementById('firebase-status');
+            const configStatus = document.getElementById('config-status');
+            const authStatus = document.getElementById('auth-status');
+
+            // Firebase check
+            if (typeof firebase === 'undefined') {
+                firebaseStatus.innerHTML = '<span style="color: red;">❌ Firebase not loaded</span>';
+                console.error('Firebase not available');
+                return;
+            } else {
+                firebaseStatus.innerHTML = '<span style="color: green;">✅ Firebase loaded successfully</span>';
+                console.log('Firebase is available');
+            }
+
+            // Config check
+            if (typeof firebaseConfig === 'undefined') {
+                configStatus.innerHTML = '<span style="color: red;">❌ Firebase config not found</span>';
+                console.error('Firebase config not available');
+                return;
+            } else {
+                configStatus.innerHTML = '<span style="color: green;">✅ Firebase config loaded</span>';
+                console.log('Firebase config available:', firebaseConfig.projectId);
+            }
+
+            // Initialize Firebase
+            try {
+                if (typeof initializeFirebase === 'function') {
+                    const result = initializeFirebase();
+                    console.log('Firebase initialization result:', result);
+                } else {
+                    console.error('initializeFirebase function not found');
+                }
+            } catch (error) {
+                console.error('Error initializing Firebase:', error);
+                configStatus.innerHTML += '<br><span style="color: red;">❌ Error during initialization: ' + error.message + '</span>';
+                return;
+            }
+
+            // Auth check
+            if (!firebase.auth) {
+                authStatus.innerHTML = '<span style="color: red;">❌ Firebase Auth not available</span>';
+                console.error('Firebase Auth not available');
+                return;
+            } else {
+                authStatus.innerHTML = '<span style="color: green;">✅ Firebase Auth available</span>';
+                console.log('Firebase Auth is available');
+                
+                // Test auth state
+                firebase.auth().onAuthStateChanged(user => {
+                    if (user) {
+                        authStatus.innerHTML += '<br><span style="color: blue;">ℹ️ User logged in: ' + user.email + '</span>';
+                        console.log('User is logged in:', user.email);
+                    } else {
+                        authStatus.innerHTML += '<br><span style="color: orange;">⚠️ No user logged in</span>';
+                        console.log('No user logged in');
+                    }
+                });
+            }
+
+            console.log('✅ All diagnostic checks completed');
+        }
+
+        function testLogin() {
+            console.log('🧪 Testing login process...');
+            
+            const email = prompt('Enter email for test:');
+            const password = prompt('Enter password for test:');
+            
+            if (email && password) {
+                firebase.auth().signInWithEmailAndPassword(email, password)
+                    .then(userCredential => {
+                        console.log('✅ Login test successful:', userCredential.user.email);
+                        alert('Login test successful!');
+                    })
+                    .catch(error => {
+                        console.error('❌ Login test failed:', error.message);
+                        alert('Login test failed: ' + error.message);
+                    });
+            } else {
+                console.log('Test login cancelled');
+            }
+        }
+
+        function clearLocalData() {
+            console.log('🧹 Clearing local storage and cache...');
+            
+            // Clear localStorage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Clear Firebase Auth
+            if (firebase.auth && firebase.auth().currentUser) {
+                firebase.auth().signOut();
+            }
+            
+            console.log('✅ Local data cleared');
+            alert('Local data cleared. You can now reload the page.');
+        }
+
+        // Error handling
+        window.addEventListener('error', function(event) {
+            console.error('Global error:', event.error);
+        });
+
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+        });
+    </script>
+</body>
+</html>
