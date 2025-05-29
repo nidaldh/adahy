@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-panel { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .error { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+        button { padding: 10px; margin: 5px; }
+        input { padding: 5px; margin: 5px; }
+        #logs { background: #333; color: #fff; padding: 10px; height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px; }
+    </style>
+    
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-database-compat.js"></script>
+</head>
+<body>
+    <h1>Firebase Authentication Debug</h1>
+    
+    <div class="debug-panel">
+        <h3>Firebase Status</h3>
+        <p>Firebase loaded: <span id="firebase-status">Checking...</span></p>
+        <p>Firebase Auth: <span id="auth-status">Checking...</span></p>
+        <p>Current User: <span id="user-status">Checking...</span></p>
+    </div>
+    
+    <div class="debug-panel">
+        <h3>Test Authentication</h3>
+        <input type="email" id="test-email" placeholder="Email" value="test@example.com">
+        <input type="password" id="test-password" placeholder="Password" value="testpass123">
+        <br>
+        <button onclick="testSignIn()">Test Sign In</button>
+        <button onclick="testSignOut()">Sign Out</button>
+        <button onclick="checkAuthState()">Check Auth State</button>
+        <button onclick="clearLogs()">Clear Logs</button>
+    </div>
+    
+    <div class="debug-panel">
+        <h3>Debug Logs</h3>
+        <div id="logs"></div>
+    </div>
+
+    <!-- Firebase Config -->
+    <script src="src/js/firebase-config.js"></script>
+    
+    <script>
+        let authStateListener = null;
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toISOString();
+            const logs = document.getElementById('logs');
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            logs.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+            logs.scrollTop = logs.scrollHeight;
+            console.log(`[${timestamp}] ${message}`);
+        }
+        
+        function updateStatus() {
+            document.getElementById('firebase-status').textContent = typeof firebase !== 'undefined' ? 'Loaded' : 'Not loaded';
+            document.getElementById('auth-status').textContent = (typeof firebase !== 'undefined' && firebase.auth) ? 'Available' : 'Not available';
+            
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                const user = firebase.auth().currentUser;
+                document.getElementById('user-status').textContent = user ? user.email : 'No user';
+            } else {
+                document.getElementById('user-status').textContent = 'Cannot check';
+            }
+        }
+        
+        function setupAuthListener() {
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                if (authStateListener) {
+                    log('Auth listener already set up');
+                    return;
+                }
+                
+                log('Setting up auth state listener...');
+                authStateListener = firebase.auth().onAuthStateChanged((user) => {
+                    log(`=== Auth state changed ===`);
+                    if (user) {
+                        log(`User signed in: ${user.email} (UID: ${user.uid})`, 'success');
+                        log(`Email verified: ${user.emailVerified}`);
+                        log(`User metadata: ${JSON.stringify(user.metadata)}`);
+                    } else {
+                        log('User signed out', 'info');
+                    }
+                    updateStatus();
+                });
+                log('Auth state listener set up successfully', 'success');
+            } else {
+                log('Cannot set up auth listener - Firebase Auth not available', 'error');
+            }
+        }
+        
+        async function testSignIn() {
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+            
+            if (!email || !password) {
+                log('Please enter email and password', 'error');
+                return;
+            }
+            
+            log(`Attempting to sign in with ${email}...`);
+            
+            try {
+                if (!firebase.auth) {
+                    throw new Error('Firebase Auth not available');
+                }
+                
+                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                log(`Sign in successful! User: ${userCredential.user.email}`, 'success');
+                log(`User UID: ${userCredential.user.uid}`);
+                updateStatus();
+            } catch (error) {
+                log(`Sign in failed: ${error.code} - ${error.message}`, 'error');
+            }
+        }
+        
+        async function testSignOut() {
+            try {
+                if (!firebase.auth) {
+                    throw new Error('Firebase Auth not available');
+                }
+                
+                await firebase.auth().signOut();
+                log('Sign out successful', 'success');
+                updateStatus();
+            } catch (error) {
+                log(`Sign out failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function checkAuthState() {
+            log('=== Current Auth State ===');
+            
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    log(`Current user: ${user.email}`, 'success');
+                    log(`User UID: ${user.uid}`);
+                    log(`Email verified: ${user.emailVerified}`);
+                    log(`Sign-in provider: ${user.providerData[0]?.providerId || 'Unknown'}`);
+                } else {
+                    log('No current user', 'info');
+                }
+            } else {
+                log('Firebase Auth not available', 'error');
+            }
+            
+            updateStatus();
+        }
+        
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            log('Page loaded, initializing debug tool...');
+            updateStatus();
+            
+            // Wait a bit for Firebase to initialize
+            setTimeout(() => {
+                log('Setting up authentication...');
+                setupAuthListener();
+                updateStatus();
+            }, 1000);
+        });
+        
+        // Check status every few seconds
+        setInterval(updateStatus, 3000);
+    </script>
+</body>
+</html>

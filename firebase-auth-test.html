@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Auth Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        button { padding: 10px 15px; margin: 5px; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+        #logs { background: #f0f0f0; padding: 10px; height: 300px; overflow-y: auto; font-family: monospace; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+    
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <h1>Firebase Authentication Test</h1>
+    
+    <div class="section">
+        <h3>Firebase Status</h3>
+        <div id="status"></div>
+    </div>
+    
+    <div class="section">
+        <h3>Authentication Test</h3>
+        <input type="email" id="email" placeholder="Email" value="">
+        <input type="password" id="password" placeholder="Password" value="">
+        <br>
+        <button onclick="testAuth()">Test Login</button>
+        <button onclick="logout()">Logout</button>
+        <button onclick="checkCurrentUser()">Check Current User</button>
+    </div>
+    
+    <div class="section">
+        <h3>Logs</h3>
+        <button onclick="clearLogs()">Clear Logs</button>
+        <div id="logs"></div>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCvmM4YI4sr9mv_-UTSFWuabaw_8D1BBKM",
+            authDomain: "alfaree-615b6.firebaseapp.com",
+            databaseURL: "https://alfaree-615b6-default-rtdb.europe-west1.firebasedatabase.app/",
+            projectId: "alfaree-615b6",
+            storageBucket: "alfaree-615b6.firebasestorage.app",
+            messagingSenderId: "935148742009",
+            appId: "1:935148742009:web:79b7b2f675b07b2ef2fba8",
+            measurementId: "G-0TJ606H9YS"
+        };
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logs = document.getElementById('logs');
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            logs.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+            logs.scrollTop = logs.scrollHeight;
+            console.log(message);
+        }
+        
+        function updateStatus() {
+            const status = document.getElementById('status');
+            const firebaseAvailable = typeof firebase !== 'undefined';
+            const authAvailable = firebaseAvailable && !!firebase.auth;
+            
+            let statusText = `Firebase loaded: ${firebaseAvailable}<br>`;
+            statusText += `Firebase Auth: ${authAvailable}<br>`;
+            
+            if (authAvailable) {
+                const currentUser = firebase.auth().currentUser;
+                statusText += `Current User: ${currentUser ? currentUser.email : 'None'}<br>`;
+            }
+            
+            status.innerHTML = statusText;
+        }
+        
+        async function testAuth() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                log('Please enter email and password', 'error');
+                return;
+            }
+            
+            log(`Testing authentication with ${email}...`);
+            
+            try {
+                if (!firebase || !firebase.auth) {
+                    throw new Error('Firebase Auth not available');
+                }
+                
+                log('Calling signInWithEmailAndPassword...');
+                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                
+                log(`✓ Login successful!`, 'success');
+                log(`User: ${userCredential.user.email}`, 'success');
+                log(`UID: ${userCredential.user.uid}`, 'success');
+                
+                updateStatus();
+                
+            } catch (error) {
+                log(`✗ Login failed: ${error.code} - ${error.message}`, 'error');
+            }
+        }
+        
+        async function logout() {
+            try {
+                await firebase.auth().signOut();
+                log('✓ Logout successful', 'success');
+                updateStatus();
+            } catch (error) {
+                log(`✗ Logout failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function checkCurrentUser() {
+            const user = firebase.auth().currentUser;
+            if (user) {
+                log(`Current user: ${user.email} (${user.uid})`, 'success');
+            } else {
+                log('No current user', 'info');
+            }
+            updateStatus();
+        }
+        
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+        
+        // Initialize Firebase and set up auth listener
+        document.addEventListener('DOMContentLoaded', () => {
+            log('Initializing Firebase...');
+            
+            try {
+                firebase.initializeApp(firebaseConfig);
+                log('✓ Firebase initialized successfully', 'success');
+                
+                // Set up auth state listener
+                firebase.auth().onAuthStateChanged((user) => {
+                    log('=== Auth State Changed ===');
+                    if (user) {
+                        log(`✓ User signed in: ${user.email}`, 'success');
+                    } else {
+                        log('User signed out', 'info');
+                    }
+                    updateStatus();
+                });
+                
+                log('✓ Auth state listener set up', 'success');
+                updateStatus();
+                
+            } catch (error) {
+                log(`✗ Firebase initialization failed: ${error.message}`, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

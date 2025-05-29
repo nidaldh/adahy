@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login Fixed</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .console { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .login-form { margin: 20px 0; padding: 20px; border: 1px solid #ddd; }
+        input, button { margin: 5px; padding: 8px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+    
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.8.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <h1>Firebase Login Test (Fixed)</h1>
+    
+    <div class="console" id="console">
+        <h3>Console Output:</h3>
+        <div id="log"></div>
+    </div>
+    
+    <div class="login-form">
+        <h3>Test Login</h3>
+        <input type="email" id="email" placeholder="Email" value="">
+        <input type="password" id="password" placeholder="Password" value="">
+        <button onclick="testLogin()">Login</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCvmM4YI4sr9mv_-UTSFWuabaw_8D1BBKM",
+            authDomain: "alfaree-615b6.firebaseapp.com",
+            databaseURL: "https://alfaree-615b6-default-rtdb.europe-west1.firebasedatabase.app/",
+            projectId: "alfaree-615b6",
+            storageBucket: "alfaree-615b6.firebasestorage.app",
+            messagingSenderId: "935148742009",
+            appId: "1:935148742009:web:79b7b2f675b07b2ef2fba8",
+            measurementId: "G-0TJ606H9YS"
+        };
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `<div class="${type}">[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // Initialize Firebase ONLY ONCE
+        let firebaseInitialized = false;
+        
+        function initFirebase() {
+            if (firebaseInitialized) {
+                log('Firebase already initialized', 'info');
+                return true;
+            }
+            
+            try {
+                firebase.initializeApp(firebaseConfig);
+                firebaseInitialized = true;
+                log('Firebase initialized successfully', 'success');
+                
+                // Listen for auth state changes
+                firebase.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                        log(`User logged in: ${user.email}`, 'success');
+                    } else {
+                        log('User logged out', 'info');
+                    }
+                });
+                
+                return true;
+            } catch (error) {
+                log(`Firebase initialization error: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!email || !password) {
+                resultDiv.innerHTML = '<span class="error">Please enter email and password</span>';
+                return;
+            }
+            
+            log(`Attempting login with: ${email}`, 'info');
+            
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    log(`Login successful: ${user.email}`, 'success');
+                    resultDiv.innerHTML = `<span class="success">Login successful! User: ${user.email}</span>`;
+                })
+                .catch((error) => {
+                    log(`Login failed: ${error.message}`, 'error');
+                    resultDiv.innerHTML = `<span class="error">Login failed: ${error.message}</span>`;
+                });
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            log('Page loaded, initializing Firebase...', 'info');
+            initFirebase();
+        });
+    </script>
+</body>
+</html>
