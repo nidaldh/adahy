@@ -1,7 +1,24 @@
 # برنامج تنظيم الأضاحي الإسلامية (Islamic Sacrifice Management System)
 
+## 🌐 Live Demo
+**App URL:** https://nidaldh.github.io/adahy/
+
 ## نظرة عامة
 تطبيق ويب شامل لإدارة الأضاحي الإسلامية ومتابعة العملاء والمدفوعات. يوفر النظام واجهة سهلة الاستخدام باللغة العربية مع دعم RTL ونظام قاعدة بيانات Firebase.
+
+## 🚀 Deployment
+This app is automatically deployed to GitHub Pages using GitHub Actions. Every push to the `main` branch triggers a new deployment.
+
+### Local Development
+```bash
+npm install
+npm start
+```
+
+### Manual Deployment
+```bash
+npm run deploy
+```
 
 ## المميزات - Features
 - ✅ إدخال معلومات العميل والحيوانات المختارة (سخل، خروف، عجل)

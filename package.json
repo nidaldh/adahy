@@ -5,9 +5,9 @@
   "main": "src/js/app.js",
   "scripts": {
     "start": "live-server src",
-    "build": "echo 'Build step not defined'",
-    "deploy:firebase": "firebase deploy",
-    "deploy:gh-pages": "npm run build && gh-pages -d src"
+    "build": "echo 'Static files ready for deployment'",
+    "deploy": "gh-pages -d src",
+    "test": "echo 'No tests specified'"
   },
   "dependencies": {
     "firebase": "^9.0.0"
