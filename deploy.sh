@@ -92,6 +92,62 @@ if [[ -f "src/js/app-tests.js" ]]; then
     print_status "ملف الاختبارات موجود - Test suite file exists"
 fi
 
+# Function to deploy to GitHub Pages
+deploy_github_pages() {
+    print_info "نشر على GitHub Pages - Deploying to GitHub Pages"
+    
+    # Create docs directory if it doesn't exist
+    if [[ ! -d "docs" ]]; then
+        mkdir docs
+        print_status "تم إنشاء مجلد docs - Created docs directory"
+    fi
+    
+    # Copy all files from src to docs
+    print_info "نسخ الملفات - Copying files"
+    cp -r src/* docs/
+    
+    # Copy the main index.html to docs root
+    cp src/index.html docs/index.html
+    
+    print_status "تم نسخ جميع الملفات إلى مجلد docs - All files copied to docs directory"
+    
+    # Create .nojekyll file to prevent Jekyll processing
+    touch docs/.nojekyll
+    print_status "تم إنشاء ملف .nojekyll - Created .nojekyll file"
+    
+    # Check if we're in a git repository
+    if [[ -d ".git" ]]; then
+        print_info "إضافة الملفات إلى Git - Adding files to Git"
+        git add docs/
+        
+        # Check if there are changes to commit
+        if git diff --staged --quiet; then
+            print_warning "لا توجد تغييرات للنشر - No changes to deploy"
+        else
+            git commit -m "Deploy to GitHub Pages - $(date)"
+            print_status "تم إنشاء commit جديد - Created new commit"
+            
+            print_info "رفع التغييرات - Pushing changes"
+            git push origin main
+            print_status "تم رفع التغييرات بنجاح - Changes pushed successfully"
+            
+            echo ""
+            print_status "تم نشر التطبيق على GitHub Pages!"
+            print_status "Application deployed to GitHub Pages!"
+            echo ""
+            print_info "يمكنك الوصول للتطبيق على - You can access the app at:"
+            echo "https://nidaldh.github.io/adahy/"
+            echo ""
+            print_warning "قد يستغرق الأمر بضع دقائق لتحديث الموقع"
+            print_warning "It may take a few minutes for the site to update"
+        fi
+    else
+        print_error "هذا المجلد ليس repository Git - This directory is not a Git repository"
+        print_info "يرجى تشغيل: git init && git remote add origin YOUR_REPO_URL"
+        print_info "Please run: git init && git remote add origin YOUR_REPO_URL"
+    fi
+}
+
 # Function to start development server
 start_server() {
     print_info "تشغيل الخادم المحلي - Starting development server"
@@ -168,8 +224,9 @@ print_info "اختر العملية التالية - Choose next action:"
 echo "1. تشغيل الخادم المحلي - Start development server"
 echo "2. فحص الملفات فقط - Check files only"
 echo "3. عرض التعليمات - Show instructions"
+echo "4. نشر على GitHub Pages - Deploy to GitHub Pages"
 
-read -p "أدخل رقم العملية (1-3): Enter action number (1-3): " choice
+read -p "أدخل رقم العملية (1-4): Enter action number (1-4): " choice
 
 case $choice in
     1)
@@ -180,6 +237,9 @@ case $choice in
         ;;
     3)
         show_usage
+        ;;
+    4)
+        deploy_github_pages
         ;;
     *)
         print_info "يمكنك تشغيل: bash deploy.sh - You can run: bash deploy.sh"

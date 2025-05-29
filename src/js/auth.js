@@ -144,14 +144,71 @@ function initializeAuth() {
 
 // Set up event listeners for authentication forms
 function setupEventListeners() {
-    // Check if elements exist before adding listeners
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await handleLogin();
+    console.log('=== Setting up event listeners ===');
+    
+    // Re-query the login form in case it wasn't available during initial DOM load
+    const currentLoginForm = document.getElementById('login-form');
+    console.log('Login form found:', !!currentLoginForm);
+    
+    if (currentLoginForm) {
+        console.log('Adding submit event listener to login form');
+        
+        // Remove any existing event listeners to prevent duplicates
+        const newForm = currentLoginForm.cloneNode(true);
+        currentLoginForm.parentNode.replaceChild(newForm, currentLoginForm);
+        
+        newForm.addEventListener('submit', async (e) => {
+            console.log('=== Form submit event triggered ===');
+            e.preventDefault(); // Prevent default form submission
+            e.stopPropagation(); // Stop event propagation
+            console.log('Default prevented, calling handleLogin...');
+            
+            try {
+                const result = await handleLogin();
+                console.log('HandleLogin completed with result:', result);
+            } catch (error) {
+                console.error('Error in handleLogin:', error);
+                showError('login-error', 'حدث خطأ أثناء تسجيل الدخول');
+            }
+            
+            return false; // Extra prevention
         });
+        
+        // Also add a backup event listener to the submit button directly
+        const submitButton = newForm.querySelector('button[type="submit"]');
+        if (submitButton) {
+            console.log('Adding click event listener to submit button');
+            submitButton.addEventListener('click', async (e) => {
+                console.log('=== Submit button clicked ===');
+                e.preventDefault(); // Prevent default behavior
+                e.stopPropagation();
+                
+                try {
+                    const result = await handleLogin();
+                    console.log('HandleLogin from button click completed with result:', result);
+                } catch (error) {
+                    console.error('Error in handleLogin from button click:', error);
+                    showError('login-error', 'حدث خطأ أثناء تسجيل الدخول');
+                }
+                
+                return false;
+            });
+        }
+        
+        console.log('✓ Event listeners attached successfully');
     } else {
-        console.error('Login form not found');
+        console.error('❌ Login form not found! Available forms:');
+        const allForms = document.querySelectorAll('form');
+        console.log('All forms found:', allForms.length);
+        allForms.forEach((form, index) => {
+            console.log(`Form ${index}:`, form.id || 'no id', form);
+        });
+        
+        // Try to set up listeners after a delay
+        setTimeout(() => {
+            console.log('Retrying setupEventListeners after delay...');
+            setupEventListeners();
+        }, 1000);
     }
     
     // Note: Logout button is set up in showMainApp() when it becomes available
@@ -159,36 +216,52 @@ function setupEventListeners() {
 
 // Handle user login
 async function handleLogin() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    console.log('=== Login attempt ===');
-    console.log('Email:', email);
-    console.log('Password length:', password.length);
-    console.log('Timestamp:', new Date().toISOString());
-
-    // Validate input
-    if (!email || !password) {
-        showError('login-error', 'يرجى ملء جميع الحقول');
-        return;
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        showError('login-error', 'البريد الإلكتروني غير صحيح');
-        return;
-    }
-
+    console.log('=== handleLogin() function called ===');
+    
     try {
+        const emailField = document.getElementById('email');
+        const passwordField = document.getElementById('password');
+        
+        console.log('Email field found:', !!emailField);
+        console.log('Password field found:', !!passwordField);
+        
+        if (!emailField || !passwordField) {
+            console.error('Email or password field not found');
+            showError('login-error', 'خطأ في النموذج - لم يتم العثور على الحقول');
+            return false;
+        }
+        
+        const email = emailField.value.trim();
+        const password = passwordField.value;
+
+        console.log('=== Login attempt ===');
+        console.log('Email:', email);
+        console.log('Password length:', password.length);
+        console.log('Timestamp:', new Date().toISOString());
+
+        // Validate input
+        if (!email || !password) {
+            console.warn('Empty email or password');
+            showError('login-error', 'يرجى ملء جميع الحقول');
+            return false;
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            console.warn('Invalid email format:', email);
+            showError('login-error', 'البريد الإلكتروني غير صحيح');
+            return false;
+        }
+
         clearErrors();
-        console.log('Attempting to sign in with Firebase Auth...');
+        console.log('Validation passed, attempting Firebase sign in...');
         
         // Check if Firebase Auth is available
         if (!firebase || !firebase.auth) {
             console.error('Firebase Auth is not available');
             showError('login-error', 'خدمة المصادقة غير متوفرة');
-            return;
+            return false;
         }
 
         const auth = firebase.auth();
@@ -213,8 +286,13 @@ async function handleLogin() {
         console.log('Auth currentUser after login:', auth.currentUser);
         
         // Clear form
-        document.getElementById('login-form').reset();
-        console.log('Login form reset');
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.reset();
+            console.log('Login form reset');
+        }
+        
+        return true;
         
     } catch (error) {
         console.error('=== Login error ===');
@@ -223,6 +301,7 @@ async function handleLogin() {
         console.error('Error message:', error.message);
         console.error('Error stack:', error.stack);
         showError('login-error', getErrorMessage(error.code));
+        return false;
     }
 }
 
