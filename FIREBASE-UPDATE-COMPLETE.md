@@ -50,7 +50,7 @@ Your Islamic Sacrifice Management System now supports:
 #### **3. Test the Application**
 ```bash
 # Application is running at:
-http://localhost:8080/src/index.html
+http://localhost:8080/docs/index.html
 
 # Test steps:
 1. Create a customer with animals
@@ -72,7 +72,7 @@ http://localhost:8080/src/index.html
 ---
 
 **🔗 Quick Access:**
-- **Application:** http://localhost:8080/src/index.html
+- **Application:** http://localhost:8080/docs/index.html
 - **Firebase Console:** https://console.firebase.google.com/project/alfaree-615b6
 - **Project Files:** `/Users/nidaldh98/code/js/animal-sales-app/`
 

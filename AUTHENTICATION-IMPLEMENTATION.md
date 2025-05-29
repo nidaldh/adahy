@@ -94,7 +94,7 @@ The application provides user-friendly error messages in Arabic for:
 ## Testing
 
 To test the authentication:
-1. Open `http://localhost:8000/src/`
+1. Open `http://localhost:8000/docs/`
 2. Click the green "إنشاء/تسجيل دخول مستخدم تجريبي" button
 3. Or manually create an account with your email
 4. Verify data is saved under your user account in Firebase Console

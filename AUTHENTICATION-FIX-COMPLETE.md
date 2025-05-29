@@ -41,7 +41,7 @@ The main application (`src/index.html`) should now:
 4. Display proper user information in the header
 
 ### 🔍 Verification Steps
-1. Open `http://localhost:8000/src/index.html`
+1. Open `http://localhost:8000/docs/index.html`
 2. Enter credentials: nidaldh98@gmail.com / Ok@123123
 3. Click "دخول" (Login)
 4. Should see main application interface

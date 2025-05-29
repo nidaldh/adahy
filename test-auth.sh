@@ -27,7 +27,7 @@ if command -v python3 &> /dev/null; then
     echo "📱 الخادم يعمل على: http://localhost:8080"
     echo ""
     echo "🔗 روابط الاختبار:"
-    echo "   التطبيق الرئيسي: http://localhost:8080/src/index.html"
+    echo "   التطبيق الرئيسي: http://localhost:8080/docs/index.html"
     echo "   اختبار سريع: http://localhost:8080/quick-test.html"
     echo "   تشخيص مفصل: http://localhost:8080/debug-auth.html"
     echo ""

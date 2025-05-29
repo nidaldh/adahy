@@ -117,6 +117,32 @@ async function handleLogin() {
     }
 }
 
+// Function to initialize all application components
+function initializeMainApplication() {
+    console.log('Initializing main application components');
+    
+    // Initialize the customer entry form (important for name and phone fields)
+    if (typeof initializeCustomerEntry === 'function') {
+        console.log('Initializing customer entry form');
+        initializeCustomerEntry();
+    } else {
+        console.error('initializeCustomerEntry function not found');
+    }
+    
+    // Load data from Firebase
+    if (typeof loadCustomersFromFirebase === 'function') {
+        loadCustomersFromFirebase();
+    }
+    
+    if (typeof loadPaymentsFromFirebase === 'function') {
+        loadPaymentsFromFirebase();
+    }
+    
+    if (typeof loadGlobalAnimalsFromFirebase === 'function') {
+        loadGlobalAnimalsFromFirebase();
+    }
+}
+
 function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -151,6 +177,9 @@ function showMainApp() {
     if (userEmailSpan && currentUser) {
         userEmailSpan.textContent = currentUser.email;
     }
+    
+    // Initialize the main application components
+    initializeMainApplication();
     
     console.log('Showing main app for user:', currentUser?.email);
 }

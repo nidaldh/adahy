@@ -118,7 +118,7 @@ function saveData(data) {
 ```bash
 cd /Users/nidaldh98/code/js/animal-sales-app
 python3 -m http.server 8000
-# افتح: http://localhost:8000/src/index.html
+# افتح: http://localhost:8000/docs/index.html
 ```
 
 ### 2. تحميل البيانات التجريبية

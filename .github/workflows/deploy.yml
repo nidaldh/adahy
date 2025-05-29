@@ -45,14 +45,14 @@ jobs:
       - name: List files to be deployed
         run: |
           echo "Files in src directory:"
-          ls -la ./src/
+          ls -la ./docs/
           echo "Content of index.html:"
-          head -20 ./src/index.html
+          head -20 ./docs/index.html
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './src'
+          path: './docs'
 
   # Deployment job
   deploy:

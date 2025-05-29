@@ -71,17 +71,26 @@ body {
 }
 
 .form-section {
-    background: #f8f9fa;
-    padding: 25px;
-    border-radius: 15px;
-    margin-bottom: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, #f8f9fa, #ffffff);
+    border: 1px solid #e9ecef;
 }
 
 .form-section h3 {
     color: #2c3e50;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.form-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, #007bff, #0056b3);
 }
 
 .form-row {
@@ -97,23 +106,158 @@ body {
 }
 
 .form-group label {
-    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
     font-weight: bold;
-    color: #495057;
-}
-
-.form-group input, .form-group select {
-    padding: 12px;
-    border: 2px solid #dee2e6;
-    border-radius: 8px;
+    color: #2c3e50;
     font-size: 1rem;
-    transition: border-color 0.3s ease;
 }
 
-.form-group input:focus, .form-group select:focus {
+.form-group label .icon {
+    font-size: 1.2rem;
+}
+
+.input-container {
+    position: relative;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e1e8ed;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.form-group input:focus {
     outline: none;
     border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-group input:valid {
+    border-color: #28a745;
+}
+
+/* Autocomplete Suggestions */
+.suggestions-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e1e8ed;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+}
+
+.suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f3f6;
+    transition: background-color 0.2s ease;
+}
+
+.suggestion-item:hover {
+    background-color: #f8f9fa;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-name {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+}
+
+.suggestion-phone {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+}
+
+.suggestion-balance {
+    color: #007bff;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Keyboard Navigation for Suggestions */
+.suggestion-selected {
+    background-color: #007bff !important;
+    color: white;
+}
+
+.suggestion-selected .suggestion-name,
+.suggestion-selected .suggestion-phone,
+.suggestion-selected .suggestion-balance,
+.suggestion-selected .suggestion-animals {
+    color: white !important;
+}
+
+/* Selected Customer Info */
+.selected-customer-info {
+    margin-top: 15px;
+    animation: slideDown 0.3s ease;
+}
+
+.info-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border: 1px solid #2196f3;
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #1565c0;
+    font-size: 0.9rem;
+}
+
+.info-icon {
+    font-size: 1.1rem;
+}
+
+.clear-btn {
+    background: none;
+    border: none;
+    color: #f44336;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+    margin-left: auto;
+}
+
+.clear-btn:hover {
+    background-color: rgba(244, 67, 54, 0.1);
+}
+
+/* Animation */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .btn {
@@ -436,5 +580,293 @@ tr:hover {
 
 .logout-btn:hover {
     background: #c82333;
+}
+
+/* Enhanced Customer Entry Styles */
+.customer-form-wrapper {
+    position: relative;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.form-group label .icon {
+    font-size: 1.2rem;
+}
+
+.input-container {
+    position: relative;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e1e8ed;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-group input:valid {
+    border-color: #28a745;
+}
+
+/* Autocomplete Suggestions */
+.suggestions-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e1e8ed;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+}
+
+.suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f3f6;
+    transition: background-color 0.2s ease;
+}
+
+.suggestion-item:hover {
+    background-color: #f8f9fa;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-name {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+}
+
+.suggestion-phone {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+}
+
+.suggestion-balance {
+    color: #007bff;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Keyboard Navigation for Suggestions */
+.suggestion-selected {
+    background-color: #007bff !important;
+    color: white;
+}
+
+.suggestion-selected .suggestion-name,
+.suggestion-selected .suggestion-phone,
+.suggestion-selected .suggestion-balance,
+.suggestion-selected .suggestion-animals {
+    color: white !important;
+}
+
+/* Selected Customer Info */
+.selected-customer-info {
+    margin-top: 15px;
+    animation: slideDown 0.3s ease;
+}
+
+.info-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border: 1px solid #2196f3;
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #1565c0;
+    font-size: 0.9rem;
+}
+
+.info-icon {
+    font-size: 1.1rem;
+}
+
+.clear-btn {
+    background: none;
+    border: none;
+    color: #f44336;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+    margin-left: auto;
+}
+
+.clear-btn:hover {
+    background-color: rgba(244, 67, 54, 0.1);
+}
+
+/* Animation */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Search Box Styling */
+.search-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 20px;
+    margin: 20px auto;
+    display: block;
+    border: 2px solid #e1e8ed;
+    border-radius: 25px;
+    font-size: 1rem;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.search-box:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    transform: scale(1.02);
+}
+
+.search-box::placeholder {
+    color: #6c757d;
+}
+
+/* Additional Customer Entry Enhancements */
+.suggestion-animals {
+    color: #28a745;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+.no-suggestions {
+    padding: 12px 16px;
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Enhanced Submit Button */
+#submit-customer {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+#submit-customer:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+}
+
+#submit-customer:active {
+    transform: translateY(0);
+}
+
+/* Phone number styling */
+input[type="tel"] {
+    direction: ltr;
+    text-align: left;
+}
+
+input[type="tel"]:focus {
+    direction: ltr;
+}
+
+/* Notification System */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 300px;
+    max-width: 500px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.notification-show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.notification-error {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+.notification-message {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.notification-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 

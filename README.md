@@ -95,7 +95,7 @@ const firebaseConfig = {
 ```bash
 # تشغيل الخادم المحلي
 python3 -m http.server 8080
-# افتح: http://localhost:8080/src/index.html
+# افتح: http://localhost:8080/docs/index.html
 ```
 
 ### 5. اختبار Firebase - Test Firebase

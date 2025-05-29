@@ -144,7 +144,7 @@ if (firebase.analytics) {
 ```bash
 cd /Users/nidaldh98/code/js/animal-sales-app
 python3 -m http.server 8080
-# Open: http://localhost:8080/src/index.html
+# Open: http://localhost:8080/docs/index.html
 ```
 
 ### Run Firebase Test

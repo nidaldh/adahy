@@ -257,23 +257,44 @@ function removeAnimalFromCustomerModal(customerId, animalCompositeKey) {
 function loadCustomersFromStorage() {
     return new Promise((resolve, reject) => {
         if (typeof firebase !== 'undefined' && firebase.database) {
-            const userPath = getUserDataPath ? getUserDataPath('customers') : 'customers';
+            const currentUserForPath = firebase.auth ? firebase.auth().currentUser : null;
+            console.log('loadCustomersFromStorage: currentUser for path construction:', currentUserForPath ? currentUserForPath.uid : 'No user');
+
+            let userPath = 'customers'; // Default path
+            if (typeof getUserDataPath === 'function') {
+                userPath = getUserDataPath('customers');
+            } else {
+                console.warn('getUserDataPath function is not available. Falling back to global "customers" path.');
+            }
+            
+            console.log('Attempting to load customers from Firebase path:', userPath);
+
             const dbRef = firebase.database().ref(userPath);
             dbRef.once('value')
                 .then(snapshot => {
                     const customers = [];
-                    snapshot.forEach(childSnapshot => {
-                        customers.push(childSnapshot.val());
-                    });
+                    if (snapshot.exists()) {
+                        snapshot.forEach(childSnapshot => {
+                            customers.push(childSnapshot.val());
+                        });
+                        console.log(`Loaded ${customers.length} customers from ${userPath}:`, customers);
+                    } else {
+                        console.log(`No data found at Firebase path: ${userPath}`);
+                    }
                     resolve(customers);
                 })
-                .catch(reject);
+                .catch(error => {
+                    console.error(`Firebase error loading customers from ${userPath}:`, error);
+                    reject(error);
+                });
         } else {
-            // Fallback to localStorage
+            console.warn('Firebase SDK not available, trying to load customers from localStorage.');
             try {
                 const customers = JSON.parse(localStorage.getItem('customers') || '[]');
+                console.log('Loaded customers from localStorage:', customers);
                 resolve(customers);
             } catch (error) {
+                console.error('Error loading customers from localStorage:', error);
                 reject(error);
             }
         }

@@ -33,11 +33,16 @@ function showTab(tabName) {
     // Add active class to clicked tab
     event.target.classList.add('active');
     
-    // Refresh data when switching to certain tabs
+    // Refresh data or initialize components when switching to certain tabs
     if (tabName === 'customer-list') {
         displayCustomers();
     } else if (tabName === 'balance-sheet') {
         displayBalanceSheet();
+    } else if (tabName === 'customer-entry') {
+        // Initialize customer entry form and components
+        if (typeof initializeCustomerEntry === 'function') {
+            initializeCustomerEntry();
+        }
     }
 }
 
@@ -143,7 +148,18 @@ function searchBalance(searchTerm) {
 
 // Initialize components
 function initializeCustomerEntry() {
-    // Customer entry logic will be in customer-entry.js
+    console.log('App.js: initializing customer entry form');
+    // Check if the function exists in customer-entry.js
+    if (typeof window.initializeCustomerEntryForm === 'function') {
+        window.initializeCustomerEntryForm();
+    } else {
+        // Direct implementation if external function not available
+        createCustomerForm();
+        setupEventListeners();
+        setupCustomerAutocomplete();
+        addAnimal();
+        console.log('Customer form should be initialized now');
+    }
 }
 
 function initializeCustomerList() {
